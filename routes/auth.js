@@ -4,10 +4,12 @@
 */
 
 const { Router } = require('express')
-const { check } =  require('express-validator')
+const { check } = require('express-validator')
+const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/auth')
+const { validarCampos } = require('../middlewares/validar-campos')
+
 const router = Router();
 
-const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/auth')
 
 //Crear Usuario
     router.post(
@@ -15,7 +17,8 @@ const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/a
         [ //Middelwares
             check('name', "El nombre es obligatorio").not().isEmpty(),
             check('email', "El email no es correcto").isEmail(),
-            check('password', "El password no es correcto").isLength({min: 6})
+            check('password', "El password no es correcto").isLength({ min: 6 }),
+            validarCampos
         ],
         crearUsuario
     );
@@ -26,7 +29,8 @@ const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/a
         '/',
         [ //Middelwares
             check('email', "El email no es correcto").isEmail(),
-            check('password', "El password no es correcto").isLength({min: 6})
+            check('password', "El password no es correcto").isLength({ min: 6 }),
+            validarCampos
         ],
         loginUsuario
     );
