@@ -50,13 +50,54 @@ const Evento = require('../models/Evento');
 /*----------------------------------------------------------
 --------------Controlador para Actualizar Eventos--------------
 -----------------------------------------------------------*/
-    const actualizarEvento = async ( req, res = response ) => {
+    const actualizarEvento = async (req, res = response) => {
 
-        res.status(201).json({
-            ok: true,
-            msg: 'Actualizar Eventos'
-        })
+        //traer el id del evento 
+        const eventId = req.params.id;
+
+        //traer el UID del usuario
+        const uid = req.uid;
+
+        try {
+            const evento = await Evento.findById(eventId);
+            
+            //Verificar que el evento exista 
+            if (!evento) {
+                return res.status(404).json({
+                    ok: false,
+                    msg: "No existe un evento con ese ID"
+                })
+            }
+
+            //Verificar que el usuario que consulta es el mismo usuario que creo el evento
+            if (evento.user.toString() !== uid) {
+                return res.status(401).json({
+                    ok: false,
+                    msg: "No tiene provilegios para editar este evento"
+                })
+            }
+            const nuevoEvento = {
+                ...req.body,
+                user: uid
+            }
+
+            //actualizar evento
+            const eventoActualizado = await Evento.findByIdAndUpdate(eventId, nuevoEvento, { new: true });
+
+            res.json({
+                ok: true,
+                evento: eventoActualizado
+            })
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                ok: false,
+                msg: 'Hable con el administrador'
+            });
+        }
     }
+
 
 
 
@@ -66,12 +107,46 @@ const Evento = require('../models/Evento');
 
     const eliminarEvento = async ( req, res = response ) => {
 
+        //traer el id del evento 
+        const eventId = req.params.id;
 
-        res.status(201).json({
-            ok: true,
-            msg: 'Eliminar Eventos'
-        })
+        //traer el UID del usuario
+        const uid = req.uid;
 
+        try {
+            const evento = await Evento.findById(eventId);
+            
+            //Verificar que el evento exista 
+            if (!evento) {
+                return res.status(404).json({
+                    ok: false,
+                    msg: "No existe un evento con ese ID"
+                })
+            }
+
+            //Verificar que el usuario que consulta es el mismo usuario que creo el evento
+            if (evento.user.toString() !== uid) {
+                return res.status(401).json({
+                    ok: false,
+                    msg: "No tiene provilegios para eliminar este evento"
+                })
+            }
+
+            //Eliminar evento
+            await Evento.findByIdAndDelete(eventId);
+
+            res.json({
+                ok: true,
+                msg: "Evento eliminado"
+            })
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                ok: false,
+                msg: 'Hable con el administrador'
+            });
+        }
     }
 
 
