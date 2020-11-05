@@ -1,5 +1,5 @@
 {
-  "name": "11-calendar-backend",
+  "name": "calendar-backend",
   "version": "1.0.0",
   "description": "Backend de la app calendar",
   "main": "index.js",
