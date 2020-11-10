@@ -26,15 +26,15 @@ Obtener Eventos--------------
 /*----------------------------------------------------------
 Crear Eventos--------------
 -----------------------------------------------------------*/
-router.post(
-    '/',
-    [
-        check('title', 'El titulo es obligatorio').not().isEmpty(),
-        check('start', 'La fecha de inicio es obligatoria').custom(isDate),
-        check('end', 'La fecha de finalización es obligatoria').custom(isDate),
-        validarCampos
-    ],
-    crearEvento);
+    router.post(
+        '/',
+        [
+            check('title', 'El titulo es obligatorio').not().isEmpty(),
+            check('start', 'La fecha de inicio es obligatoria').custom(isDate),
+            check('end', 'La fecha de finalización es obligatoria').custom(isDate),
+            validarCampos
+        ],
+        crearEvento);
     
 
 /*----------------------------------------------------------
